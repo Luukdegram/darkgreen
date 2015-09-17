@@ -11,9 +11,6 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 
--- Load Debian menu entries
-require("debian.menu")
-
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -39,9 +36,12 @@ do
 end
 -- }}}
 
--- {{{ Variable definitions
+-- {{{ Variables ============================================================
+user = "luuk"
+path = "/home/".. user .. "/.config/awesome/"
+
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init("/usr/share/awesome/themes/default/theme.lua")
+beautiful.init(path .. "themes/darkgreen/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
@@ -71,7 +71,7 @@ local layouts =
     awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier
 }
--- }}}
+-- }}} ========================================================================
 
 -- {{{ Wallpaper
 if beautiful.wallpaper then
@@ -100,8 +100,8 @@ myawesomemenu = {
 }
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "Debian", debian.menu.Debian_menu.Debian },
-                                    { "open terminal", terminal }
+                                    { "open terminal", terminal },
+                                    { "Google Chrome", "/usr/bin/google-chrome-stable & disown"}
                                   }
                         })
 
