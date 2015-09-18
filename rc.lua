@@ -199,7 +199,7 @@ cpuicon:set_image(beautiful.cpu)
 fswidget = wibox.widget.textbox()
 
 vicious.register(fswidget, vicious.widgets.fs,
-'<span background="#313131" font="Inconsolata 11"> <span font="Inconsolata 11" color="#AAAAAA">${/home used_p}/${/home avail_p} GB </span></span>', 800)
+'<span background="#313131" font="Inconsolata 11"> <span font="Inconsolata 11" color="#AAAAAA">${/ used_gb}/${/ size_gb} GB </span></span>', 800)
 
 fsicon = wibox.widget.imagebox()
 fsicon:set_image(beautiful.hdd)
