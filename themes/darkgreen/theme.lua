@@ -21,7 +21,7 @@ theme.font      = "sans 8"
 theme.fg_normal  = "#DCDCCC"
 theme.fg_focus   = "#F0DFAF"
 theme.fg_urgent  = "#CC9393"
-theme.bg_normal  = "#3F3F3F"
+theme.bg_normal  = "#222222"
 theme.bg_focus   = "#1E2320"
 theme.bg_urgent  = "#3F3F3F"
 theme.bg_systray = theme.bg_normal
@@ -127,9 +127,9 @@ theme.titlebar_maximized_button_normal_inactive = "/usr/share/awesome/themes/zen
 -- }}}
 
 -- {{	Separators	}}
-theme.arr1 = pathToConfig .. "themes/darkgreen/icons/arr1.png"
-theme.arr1_1d = pathToConfig .. "themes/darkgreen/icons/arr1_1d.png"
-theme.arr1_d1 = pathToConfig .. "themes/darkgreen/icons/arr1_d1.png"
+theme.arrl = pathToConfig .. "themes/darkgreen/icons/arrl.png"
+theme.arrl_ld = pathToConfig .. "themes/darkgreen/icons/arrl_ld.png"
+theme.arrl_dl = pathToConfig .. "themes/darkgreen/icons/arrl_dl.png"
 
 -- {{	Time and date clock icon 	}}
 theme.clock = pathToConfig .. "themes/darkgreen/icons/myclocknew.png"
