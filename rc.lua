@@ -11,6 +11,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local vicious = require("vicious")
+local lain = require("lain")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -63,6 +64,7 @@ arrl_dl:set_image(beautiful.arrl_dl)
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
+altkey = "Mod1"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
@@ -121,6 +123,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- {{{ Wibox
+markup = lain.util.markup
 
 -- {{ Textclock   }}
 mytextclock = awful.widget.textclock()
@@ -162,24 +165,25 @@ end, 120, 'wlp2s0')
 
 -- {{   Volume Widget   }} 
 
+volicon = wibox.widget.imagebox(beautiful.widget_vol)
+volumewidget = lain.widgets.alsa({
+    settings = function()
+          if volume_now.status == "off" then
+              volicon:set_image(beautiful.widget_vol_mute)
+          elseif tonumber(volume_now.level) == 0 then
+              volicon:set_image(beautiful.widget_vol_no)
+          elseif tonumber(volume_now.level) <= 50 then
+              volicon:set_image(beautiful.widget_vol_low)
+          else
+              volicon:set_image(beautiful.widget_vol)
+          end
+
+          widget:set_markup(markup.font('Inconsolata 11', volume_now.level .. "% "))
+      end
+  })
+
 volume = wibox.widget.textbox()
 vicious.register(volume, vicious.widgets.volume, '<span font="Inconsolata 11" color="#AAAAAA" background="#1F2428"> Vol:$1 </span>', 0.2, "Master")
-
-volumeicon = wibox.widget.imagebox()
-vicious.register(volumeicon, vicious.widgets.volume, function(widget, args)
-        local paraone = tonumber(args[1])
-
-        if args[2] == "♩" or paraone == 0 then
-                volumeicon:set_image(beautiful.mute)
-        elseif paraone >= 67 and paraone <= 100 then
-                volumeicon:set_image(beautiful.music)
-        elseif paraone >= 33 and paraone <= 66 then
-                volumeicon:set_image(beautiful.music)
-        else
-                volumeicon:set_image(beautiful.music)
-        end
-
-end, 0.3, "Master")
 
 -- {{ MEM widget  }}
 memwidget = wibox.widget.textbox()
@@ -205,15 +209,26 @@ fsicon = wibox.widget.imagebox()
 fsicon:set_image(beautiful.hdd)
 
 -- {{   MPD player  }}
-mpd = wibox.widget.textbox()
-vicious.register(mpd, vicious.widgets.mpd,
- function (mpdwidget, args)
-        if args["{state}"] == "Stop" then 
-            return " - "
-        else 
-            return args["{Artist}"]..' - '.. args["{Title}"]
+mpdicon = wibox.widget.imagebox(beautiful.widget_music)
+mpdicon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(musicplr) end)))
+mpdwidget = lain.widgets.mpd({
+    settings = function()
+        if mpd_now.state == "play" then
+            artist = " " .. mpd_now.artist .. " "
+            title  = mpd_now.title  .. " "
+            mpdicon:set_image(beautiful.widget_music_on)
+        elseif mpd_now.state == "pause" then
+            artist = " mpd "
+            title  = "paused "
+        else
+            artist = ""
+            title  = ""
+            mpdicon:set_image(beautiful.widget_music)
         end
-    end, 10)
+
+        widget:set_markup(markup("#EA6F81", artist) .. title)
+    end
+})
 
 -- {{   MAILS   }}
 mailicon = wibox.widget.imagebox()
@@ -223,7 +238,7 @@ function mailcount()
     local l = nil
     if f ~= nil then
         l = f:read()
-        if l == "0" then
+        if l == "0" or l ~= nil then
             mailicon:set_image(beautiful.mail)
         else
             mailicon:set_image(beautiful.mailopen)
@@ -317,7 +332,8 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    right_layout:add(mpd)
+    right_layout:add(mpdicon)
+    right_layout:add(mpdwidget)
     if s == 1 then right_layout:add(wibox.widget.systray()) end
     right_layout:add(arrl_ld)
     right_layout:add(mailicon)
@@ -329,8 +345,8 @@ for s = 1, screen.count() do
     right_layout:add(cpuicon)
     right_layout:add(cpuwidget)
     right_layout:add(arrl_dl)
-    right_layout:add(volumeicon)
-    right_layout:add(volume)
+    right_layout:add(volicon)
+    right_layout:add(volumewidget)
     right_layout:add(arrl_ld)
     right_layout:add(fsicon)
     right_layout:add(fswidget)
@@ -424,8 +440,53 @@ globalkeys = awful.util.table.join(
                   awful.util.getdir("cache") .. "/history_eval")
               end),
     -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end)
+    awful.key({ modkey }, "p", function() menubar.show() end),
+
+    -- ALSA volume control
+    awful.key({ altkey }, "Up",
+        function ()
+            os.execute(string.format("amixer set %s 1%%+", volumewidget.channel))
+            volumewidget.update()
+        end),
+    awful.key({ altkey }, "Down",
+        function ()
+            os.execute(string.format("amixer set %s 1%%-", volumewidget.channel))
+            volumewidget.update()
+        end),
+    awful.key({ altkey }, "m",
+        function ()
+            os.execute(string.format("amixer set %s toggle", volumewidget.channel))
+            volumewidget.update()
+        end),
+    awful.key({ altkey, "Control" }, "m",
+        function ()
+            os.execute(string.format("amixer set %s 100%%", volumewidget.channel))
+            volumewidget.update()
+        end),
+    -- MPD control
+    awful.key({ altkey, "Control" }, "Up",
+        function ()
+            awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
+            mpdwidget.update()
+        end),
+    awful.key({ altkey, "Control" }, "Down",
+        function ()
+            awful.util.spawn_with_shell("mpc stop || ncmpc stop || pms stop")
+            mpdwidget.update()
+        end),
+    awful.key({ altkey, "Control" }, "Left",
+        function ()
+            awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
+            mpdwidget.update()
+        end),
+    awful.key({ altkey, "Control" }, "Right",
+        function ()
+            awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
+            mpdwidget.update()
+        end)
 )
+
+
 
 clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),

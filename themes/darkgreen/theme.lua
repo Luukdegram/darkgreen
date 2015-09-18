@@ -145,9 +145,13 @@ theme.hdd = pathToConfig .. "themes/darkgreen/icons/hdd.png"
 -- {{ 	Charging icon 	}}
 theme.ac = pathToConfig .. "themes/darkgreen/icons/ac.png"
 
--- {{	volume 	}}
-theme.mute = pathToConfig .. "themes/darkgreen/icons/mute.png"
+-- {{	volume & Music	}}
 theme.music = pathToConfig .. "themes/darkgreen/icons/music.png"
+theme.widget_vol_mute = pathToConfig .. "themes/darkgreen/icons/vol_mute.png"
+theme.widget_vol = pathToConfig .. "themes/darkgreen/icons/vol.png"
+theme.widget_vol_no = pathToConfig .. "themes/darkgreen/icons/vol_no.png"
+theme.widget_vol_low = pathToConfig .. "themes/darkgreen/icons/vol_low.png"
+
 
 -- {{	CPU icon 	}}
 theme.cpu = pathToConfig .. "themes/darkgreen/icons/cpu.png"
@@ -157,7 +161,7 @@ theme.mem = pathToConfig .. "themes/darkgreen/icons/mem.png"
 
 -- {{ Mail 	}}
 theme.mail = pathToConfig .. "themes/darkgreen/icons/mail.png"
-theme.mailopen = pathToConfig .. "themes/darkgreen/icons/mailopen.png"
+theme.mailopen = pathToConfig .. "themes/darkgreen/icons/mail_on.png"
 
 theme.icon_theme = nil
 
