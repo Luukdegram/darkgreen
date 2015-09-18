@@ -10,6 +10,7 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
+local vicious = require("vicious")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -37,16 +38,24 @@ end
 -- }}}
 
 -- {{{ Variables ============================================================
-user = "luuk"
-path = "/home/".. user .. "/.config/awesome/"
+config_dir = (os.getenv("HOME") .. "/.config/awesome/")
+themes_dir = (con)
 
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(path .. "themes/darkgreen/theme.lua")
+beautiful.init(config_dir .. "themes/darkgreen/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
+
+-- {{ Separators  }}
+arr1 = wibox.widget.imagebox()
+arr1:set_image(beautiful.arr1)
+arr1_1d = wibox.widget.imagebox()
+arr1_1d:set_image(beautiful.arr1_1d)
+arr1_d1 = wibox.widget.imagebox()
+arr1_d1:set_image(beautiful.arr1_d1)
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -86,7 +95,7 @@ end
 tags = {}
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
+    tags[s] = awful.tag({ "main", "stuff" }, s, layouts[1])
 end
 -- }}}
 
@@ -99,9 +108,15 @@ myawesomemenu = {
    { "quit", awesome.quit }
 }
 
+browsersmenu = {
+  { "Google Chrome", "/usr/bin/google-chrome-stable" },
+  { "Firefox", "/usr/bin/firefox" },
+}
+
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
                                     { "open terminal", terminal },
-                                    { "Google Chrome", "/usr/bin/google-chrome-stable & disown"}
+                                    { "browsers", browsersmenu },
+                                    { "files", "xdg-open ." }
                                   }
                         })
 

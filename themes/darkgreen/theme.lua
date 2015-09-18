@@ -8,6 +8,9 @@
 
 -- {{{ Main
 theme = {}
+
+pathToConfig = os.getenv("HOME") .. "/.config/awesome/"
+
 theme.wallpaper = "/usr/share/awesome/themes/zenburn/zenburn-background.png"
 -- }}}
 
@@ -25,7 +28,7 @@ theme.bg_systray = theme.bg_normal
 -- }}}
 
 -- {{{ Borders
-theme.border_width  = 2
+theme.border_width  = 1
 theme.border_normal = "#3F3F3F"
 theme.border_focus  = "#6F6F6F"
 theme.border_marked = "#CC9393"
@@ -122,5 +125,40 @@ theme.titlebar_maximized_button_focus_inactive  = "/usr/share/awesome/themes/zen
 theme.titlebar_maximized_button_normal_inactive = "/usr/share/awesome/themes/zenburn/titlebar/maximized_normal_inactive.png"
 -- }}}
 -- }}}
+
+-- {{	Separators	}}
+theme.arr1 = pathToConfig .. "themes/darkgreen/icons/arr1.png"
+theme.arr1_1d = pathToConfig .. "themes/darkgreen/icons/arr1_1d.png"
+theme.arr1_d1 = pathToConfig .. "themes/darkgreen/icons/arr1_d1.png"
+
+-- {{	Time and date clock icon 	}}
+theme.clock = pathToConfig .. "themes/darkgreen/icons/myclocknew.png"
+
+-- {{	Wifi icons 	}}
+theme.netlow = pathToConfig .. "themes/darkgreen/icons/netlow.png"
+theme.netmed = pathToConfig .. "themes/darkgreen/icons/netmedium.png"
+theme.nethigh = pathToConfig .. "themes/darkgreen/icons/nethigh.png"
+
+-- {{	HDD icon 	}}
+theme.hdd = pathToConfig .. "themes/darkgreen/icons/hdd.png"
+
+-- {{ 	Charging icon 	}}
+theme.ac = pathToConfig .. "themes/darkgreen/icons/ac.png"
+
+-- {{	volume 	}}
+theme.mute = pathToConfig .. "themes/darkgreen/icons/mute.png"
+theme.music = pathToConfig .. "themes/darkgreen/icons/music.png"
+
+-- {{	CPU icon 	}}
+theme.cpu = pathToConfig .. "themes/darkgreen/icons/cpu.png"
+
+-- {{	Memory 	}}
+theme.mem = pathToConfig .. "themes/darkgreen/icons/mem.png"
+
+-- {{ Mail 	}}
+theme.mail = pathToConfig .. "themes/darkgreen/icons/mail.png"
+theme.mailopen = pathToConfig .. "themes/darkgreen/icons/mailopen.png"
+
+theme.icon_theme = nil
 
 return theme
