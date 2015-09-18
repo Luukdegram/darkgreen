@@ -204,16 +204,40 @@ vicious.register(fswidget, vicious.widgets.fs,
 fsicon = wibox.widget.imagebox()
 fsicon:set_image(beautiful.hdd)
 
--- {{   GMail Widget  }}
+-- {{   MPD player  }}
+mpd = wibox.widget.textbox()
+vicious.register(mpd, vicious.widgets.mpd,
+ function (mpdwidget, args)
+        if args["{state}"] == "Stop" then 
+            return " - "
+        else 
+            return args["{Artist}"]..' - '.. args["{Title}"]
+        end
+    end, 10)
+
+-- {{   MAILS   }}
 mailicon = wibox.widget.imagebox()
-vicious.register(mailicon, vicious.widgets.gmail, function(widget, args)
-    local newMail = tonumber(args["{count}"])
-    if newMail > 0 then
-        mailicon:set_image(beautiful.mail)
+function mailcount()
+    os.execute(config_dir .. "unread.py > ~/.mailcount")
+    local f = io.open(os.getenv("HOME") .. "/.mailcount")
+    local l = nil
+    if f ~= nil then
+        l = f:read()
+        if l == "0" then
+            mailicon:set_image(beautiful.mail)
+        else
+            mailicon:set_image(beautiful.mailopen)
+        end
     else
-        mailicon:set_image(beautiful.mailopen)
+          l = "?"
     end
-end, 15)
+    f:close()
+    return l
+end
+
+mymail = wibox.widget.textbox( mailcount() )
+mymail.timer = timer{timeout=60}
+mymail.timer:connect_signal("timeout", function () mymail:set_text ( mailcount() ) end)
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -293,9 +317,11 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
+    right_layout:add(mpd)
     if s == 1 then right_layout:add(wibox.widget.systray()) end
-     right_layout:add(arrl_ld)
+    right_layout:add(arrl_ld)
     right_layout:add(mailicon)
+    right_layout:add(mymail)
     right_layout:add(arrl_dl)
     right_layout:add(memicon)
     right_layout:add(memwidget)
