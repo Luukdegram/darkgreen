@@ -49,14 +49,7 @@ beautiful.init(config_dir .. "themes/darkgreen/theme.lua")
 terminal = "x-terminal-emulator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
-
--- {{ Separators  }}
-arrl = wibox.widget.imagebox()
-arrl:set_image(beautiful.arrl)
-arrl_ld = wibox.widget.imagebox()
-arrl_ld:set_image(beautiful.arrl_ld)
-arrl_dl = wibox.widget.imagebox()
-arrl_dl:set_image(beautiful.arrl_dl)
+iptraf = terminal .. " -g 180x54-20+34 -e sudo iptraf-ng -i all "
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -124,44 +117,49 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 
 -- {{{ Wibox
 markup = lain.util.markup
-
--- {{ Textclock   }}
-mytextclock = awful.widget.textclock()
+separators = lain.util.separators
 
 -- {{ Time and Date   }}
-tdwidget = wibox.widget.textbox()
-vicious.register(tdwidget, vicious.widgets.date, '<span font="Inconsolata 11" color="#AAAAAA" background="#1F2428"> %b %d %I:%M </span>', 20)
+clockicon = wibox.widget.imagebox(beautiful.clock)
+mytextclock = awful.widget.textclock(" %a %d %b  %H:%M")
 
-clockicon = wibox.widget.imagebox()
-clockicon:set_image(beautiful.clock)
+mytextclock = lain.widgets.abase({
+    timeout  = 60,
+    cmd      = "date +'%a %d %b %R'",
+    settings = function()
+        widget:set_markup(markup("#34495e", " " .. output))
+    end
+})
 
 -- {{   Battery   }}
-batwidget = wibox.widget.textbox()
-vicious.register(batwidget, vicious.widgets.bat, '<span font="Inconsolata 11" color="#AAAAAA" background="#1F2428">$1$2% </span>', 30, "BAT0")
-
-baticon = wibox.widget.imagebox()
-baticon:set_image(beautiful.ac)
+baticon = wibox.widget.imagebox(beautiful.widget_battery)
+batwidget = lain.widgets.bat({
+    settings = function()
+        if bat_now.perc == "N/A" then
+            widget:set_markup(markup("#34495e", " AC "))
+            baticon:set_image(beautiful.widget_ac)
+            return
+        elseif tonumber(bat_now.perc) <= 5 then
+            baticon:set_image(beautiful.widget_battery_empty)
+        elseif tonumber(bat_now.perc) <= 15 then
+            baticon:set_image(beautiful.widget_battery_low)
+        else
+            baticon:set_image(beautiful.widget_battery)
+        end
+        widget:set_markup(markup("#34495e", " " .. bat_now.perc .. "% "))
+    end
+})
 
 -- {{   Net Widget  }}
-netwidget = wibox.widget.textbox()
-neticon = wibox.widget.imagebox()
-
-vicious.register(netwidget, vicious.widgets.net, function(widgets,args)
-        local interface = "eth0"
-        return '<span font="Inconsolata 11" color="#AAAAAA" background="#313131">' ..args["{"..interface.." down_kb}"]..'kbps'..'</span>' end, 10)
-netwidget:buttons(awful.util.table.join(awful.button({ }, 1, function() awful.util.spawn_with_shell('wicd-client -n') end)))
-
----{{    Wifi Signal Widget    }}
-vicious.register(neticon, vicious.widgets.wifi, function(widget, args)
-    local sigstrength = tonumber(args["{link}"])
-    if sigstrength > 69 then
-        neticon:set_image(beautiful.nethigh)
-    elseif sigstrength > 40 and sigstrength < 70 then
-        neticon:set_image(beautiful.netmedium)
-    else
-        neticon:set_image(beautiful.netlow)
+neticon = wibox.widget.imagebox(beautiful.net)
+neticon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(iptraf) end)))
+netwidget = lain.widgets.net({
+    settings = function()
+        widget:set_markup(markup("#7AC82E", " " .. net_now.received)
+                          .. " " ..
+                          markup("#46A8C3", " " .. net_now.sent .. " "))
     end
-end, 120, 'wlp2s0')
+})
 
 -- {{   Volume Widget   }} 
 
@@ -178,55 +176,53 @@ volumewidget = lain.widgets.alsa({
               volicon:set_image(beautiful.widget_vol)
           end
 
-          widget:set_markup(markup.font('Inconsolata 11', volume_now.level .. "% "))
+          widget:set_markup(markup("#34495e", volume_now.level .. "% "))
       end
   })
 
-volume = wibox.widget.textbox()
-vicious.register(volume, vicious.widgets.volume, '<span font="Inconsolata 11" color="#AAAAAA" background="#1F2428"> Vol:$1 </span>', 0.2, "Master")
-
 -- {{ MEM widget  }}
-memwidget = wibox.widget.textbox()
-vicious.register(memwidget, vicious.widgets.mem, '<span background="#1F2428" font="Inconsolata 11"> <span font="Inconsolata 11" color="#AAAAAA" background="#1F2428">$2MB </span></span>', 20)
-memicon = wibox.widget.imagebox()
-memicon:set_image(beautiful.mem)
+memicon = wibox.widget.imagebox(beautiful.mem)
+memwidget = lain.widgets.mem({
+    settings = function()
+        widget:set_markup(markup("#34495e", " " .. mem_now.used .. "MB "))
+    end
+})
 
 -- {{   CPU   }}
-cpuwidget = wibox.widget.textbox()
-vicious.register(cpuwidget, vicious.widgets.cpu,
-'<span background="#313131" font="Inconsolata 11"> <span font="Inconsolata 11" color="#AAAAAA">$2%<span color="#888888">·</span>$3% </span></span>', 5)
-
-cpuicon = wibox.widget.imagebox()
-cpuicon:set_image(beautiful.cpu)
+cpuicon = wibox.widget.imagebox(beautiful.cpu)
+cpuwidget = lain.widgets.cpu({
+    settings = function()
+        widget:set_text(" " .. cpu_now.usage .. "% ")
+    end
+})
 
 -- {{   File Size Widget  }}
-fswidget = wibox.widget.textbox()
-
-vicious.register(fswidget, vicious.widgets.fs,
-'<span background="#313131" font="Inconsolata 11"> <span font="Inconsolata 11" color="#AAAAAA">${/ used_gb}/${/ size_gb} GB </span></span>', 800)
-
-fsicon = wibox.widget.imagebox()
-fsicon:set_image(beautiful.hdd)
+fsicon = wibox.widget.imagebox(beautiful.hdd)
+fswidget = lain.widgets.fs({
+    settings  = function()
+        widget:set_text(" " .. fs_now.used .. "% ")
+    end
+})
 
 -- {{   MPD player  }}
-mpdicon = wibox.widget.imagebox(beautiful.widget_music)
+mpdicon = wibox.widget.imagebox(beautiful.music)
 mpdicon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(musicplr) end)))
 mpdwidget = lain.widgets.mpd({
     settings = function()
         if mpd_now.state == "play" then
             artist = " " .. mpd_now.artist .. " "
             title  = mpd_now.title  .. " "
-            mpdicon:set_image(beautiful.widget_music_on)
+            mpdicon:set_image(beautiful.musicon)
         elseif mpd_now.state == "pause" then
             artist = " mpd "
             title  = "paused "
         else
             artist = ""
             title  = ""
-            mpdicon:set_image(beautiful.widget_music)
+            mpdicon:set_image(beautiful.music)
         end
 
-        widget:set_markup(markup("#EA6F81", artist) .. title)
+        widget:set_markup(markup("#34495e", artist .. " - " .. title))
     end
 })
 
@@ -253,6 +249,15 @@ end
 mymail = wibox.widget.textbox( mailcount() )
 mymail.timer = timer{timeout=60}
 mymail.timer:connect_signal("timeout", function () mymail:set_text ( mailcount() ) end)
+
+
+-- Separators
+spr = wibox.widget.textbox(' ')
+arrl = wibox.widget.imagebox()
+arrl:set_image(beautiful.arrl)
+arrl_dl = separators.arrow_left(beautiful.fg_normal, "alpha")
+arrl_ld = separators.arrow_left("alpha", beautiful.fg_normal)
+
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -331,36 +336,37 @@ for s = 1, screen.count() do
     left_layout:add(mypromptbox[s])
 
     -- Widgets that are aligned to the right
-    local right_layout = wibox.layout.fixed.horizontal()
-    right_layout:add(mpdicon)
-    right_layout:add(mpdwidget)
+    local right_layout_toggle = true
+    local function right_layout_add (...)
+        local arg = {...}
+        if right_layout_toggle then
+            right_layout:add(arrl_ld)
+            for i, n in pairs(arg) do
+                right_layout:add(wibox.widget.background(n ,beautiful.fg_normal))
+            end
+        else
+            right_layout:add(arrl_dl)
+            for i, n in pairs(arg) do
+                right_layout:add(n)
+            end
+        end
+        right_layout_toggle = not right_layout_toggle
+    end
+
+    right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
-    right_layout:add(arrl_ld)
-    right_layout:add(mailicon)
-    right_layout:add(mymail)
-    right_layout:add(arrl_dl)
-    right_layout:add(memicon)
-    right_layout:add(memwidget)
-    right_layout:add(arrl_ld)
-    right_layout:add(cpuicon)
-    right_layout:add(cpuwidget)
-    right_layout:add(arrl_dl)
-    right_layout:add(volicon)
-    right_layout:add(volumewidget)
-    right_layout:add(arrl_ld)
-    right_layout:add(fsicon)
-    right_layout:add(fswidget)
-    right_layout:add(arrl_dl)
-    right_layout:add(baticon)
-    right_layout:add(batwidget)
-    right_layout:add(arrl_ld)
-    right_layout:add(neticon)
-    right_layout:add(netwidget)
-    right_layout:add(arrl_dl)
-    right_layout:add(clockicon)
-    right_layout:add(tdwidget)
-    right_layout:add(arrl_ld)
-    right_layout:add(mylayoutbox[s])
+    right_layout:add(spr)
+    right_layout:add(arrl)
+    right_layout_add(mpdicon, mpdwidget)
+    right_layout_add(mailicon, mymail)
+    right_layout_add(memicon, memwidget)
+    right_layout_add(cpuicon, cpuwidget)
+    right_layout_add(volicon, volumewidget)
+    right_layout_add(fsicon, fswidget)
+    right_layout_add(baticon, batwidget)
+    right_layout_add(neticon, netwidget)
+    right_layout_add(mytextclock, spr)
+    right_layout_add(mylayoutbox[s])
 
     -- Now bring it all together (with the tasklist in the middle)
     local layout = wibox.layout.align.horizontal()

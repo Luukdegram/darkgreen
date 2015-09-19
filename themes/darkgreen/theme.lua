@@ -18,11 +18,11 @@ theme.wallpaper = "/usr/share/awesome/themes/zenburn/zenburn-background.png"
 theme.font      = "sans 8"
 
 -- {{{ Colors
-theme.fg_normal  = "#DCDCCC"
-theme.fg_focus   = "#F0DFAF"
+theme.fg_normal  = "#1abc9c"
+theme.fg_focus   = "#16a085"
 theme.fg_urgent  = "#CC9393"
-theme.bg_normal  = "#222222"
-theme.bg_focus   = "#1E2320"
+theme.bg_normal  = "#34495e"
+theme.bg_focus   = "#2c3e50"
 theme.bg_urgent  = "#3F3F3F"
 theme.bg_systray = theme.bg_normal
 -- }}}
@@ -127,31 +127,33 @@ theme.titlebar_maximized_button_normal_inactive = "/usr/share/awesome/themes/zen
 -- }}}
 
 -- {{	Separators	}}
-theme.arrl = pathToConfig .. "themes/darkgreen/icons/arrl.png"
-theme.arrl_ld = pathToConfig .. "themes/darkgreen/icons/arrl_ld.png"
-theme.arrl_dl = pathToConfig .. "themes/darkgreen/icons/arrl_dl.png"
+theme.arrl = pathToConfig .. "themes/darkgreen/icons/arrl_sf.png"
+theme.arrl_ld = pathToConfig .. "themes/darkgreen/icons/arrl_ld_sf.png"
+theme.arrl_dl = pathToConfig .. "themes/darkgreen/icons/arrl_dl_sf.png"
 
 -- {{	Time and date clock icon 	}}
 theme.clock = pathToConfig .. "themes/darkgreen/icons/myclocknew.png"
 
--- {{	Wifi icons 	}}
-theme.netlow = pathToConfig .. "themes/darkgreen/icons/netlow.png"
-theme.netmed = pathToConfig .. "themes/darkgreen/icons/netmedium.png"
-theme.nethigh = pathToConfig .. "themes/darkgreen/icons/nethigh.png"
+-- {{	Network icons 	}}
+theme.net = pathToConfig .. "themes/darkgreen/icons/net.png"
+theme.net_wired = pathToConfig .. "themes/darkgreen/icons/net_wired.png"
 
 -- {{	HDD icon 	}}
 theme.hdd = pathToConfig .. "themes/darkgreen/icons/hdd.png"
 
--- {{ 	Charging icon 	}}
-theme.ac = pathToConfig .. "themes/darkgreen/icons/ac.png"
-
 -- {{	volume & Music	}}
-theme.music = pathToConfig .. "themes/darkgreen/icons/music.png"
+theme.music = pathToConfig .. "themes/darkgreen/icons/note.png"
+theme.musicon = pathToConfig .. "themes/darkgreen/icons/note_on.png"
 theme.widget_vol_mute = pathToConfig .. "themes/darkgreen/icons/vol_mute.png"
 theme.widget_vol = pathToConfig .. "themes/darkgreen/icons/vol.png"
 theme.widget_vol_no = pathToConfig .. "themes/darkgreen/icons/vol_no.png"
 theme.widget_vol_low = pathToConfig .. "themes/darkgreen/icons/vol_low.png"
 
+-- {{ 	Battery 	}}
+theme.widget_battery = pathToConfig .. "themes/darkgreen/icons/battery.png"
+theme.widget_battery_low = pathToConfig .. "themes/darkgreen/icons/battery_low.png"
+theme.widget_battery_empty = pathToConfig .. "themes/darkgreen/icons/battery_empty.png"
+theme.widget_ac = pathToConfig .. "themes/darkgreen/icons/ac.png"
 
 -- {{	CPU icon 	}}
 theme.cpu = pathToConfig .. "themes/darkgreen/icons/cpu.png"
