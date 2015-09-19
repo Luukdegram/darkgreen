@@ -6,7 +6,7 @@ import imaplib
 
 #default imap port is 993, change otherwise
 M=imaplib.IMAP4_SSL("imap.gmail.com", 993)
-M.login("luukdegram@gmail.com","fbevwhrduhdokgbq")
+M.login("ENTER_EMAIL","ENTER_PASSWORD")
 
 status, counts = M.status("Inbox","(MESSAGES UNSEEN)")
 
