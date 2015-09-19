@@ -11,7 +11,7 @@ theme = {}
 
 pathToConfig = os.getenv("HOME") .. "/.config/awesome/"
 
-theme.wallpaper = "/usr/share/awesome/themes/zenburn/zenburn-background.png"
+theme.wallpaper = pathToConfig .. "themes/darkgreen/background.jpg"
 -- }}}
 
 -- {{{ Styles

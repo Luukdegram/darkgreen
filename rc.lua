@@ -96,15 +96,16 @@ myawesomemenu = {
    { "quit", awesome.quit }
 }
 
-browsersmenu = {
-  { "Google Chrome", "/usr/bin/google-chrome-stable" },
-  { "Firefox", "/usr/bin/firefox" },
+toolsmenu = {
+  { "Sublime", "/home/luuk/tools/sublime_text_3/sublime_text"},
+  { "CLion", "/home/luuk/tools/clion/bin/clion.sh"},
+  { "Idea", "/home/luuk/tools/idea/bin/idea.sh"}
 }
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "open terminal", terminal },
-                                    { "browsers", browsersmenu },
-                                    { "files", "xdg-open ." }
+                                    { "files", "nautilus ." },
+                                    { "Firefox", "/usr/bin/firefox" },
+                                    { "Tools", toolsmenu}
                                   }
                         })
 
@@ -451,22 +452,22 @@ globalkeys = awful.util.table.join(
     -- ALSA volume control
     awful.key({ altkey }, "Up",
         function ()
-            os.execute(string.format("amixer set %s 1%%+", volumewidget.channel))
+            os.execute(string.format("amixer -c 1 set %s 1%%+", volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ altkey }, "Down",
         function ()
-            os.execute(string.format("amixer set %s 1%%-", volumewidget.channel))
+            os.execute(string.format("amixer -c 1 set %s 1%%-", volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ altkey }, "m",
         function ()
-            os.execute(string.format("amixer set %s toggle", volumewidget.channel))
+            os.execute(string.format("amixer -c 1 set %s toggle", volumewidget.channel))
             volumewidget.update()
         end),
     awful.key({ altkey, "Control" }, "m",
         function ()
-            os.execute(string.format("amixer set %s 100%%", volumewidget.channel))
+            os.execute(string.format("amixer -c 1 set %s 100%%", volumewidget.channel))
             volumewidget.update()
         end),
     -- MPD control
