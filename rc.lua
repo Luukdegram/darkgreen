@@ -49,7 +49,8 @@ beautiful.init(config_dir .. "themes/darkgreen/theme.lua")
 terminal = "x-terminal-emulator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
-iptraf = terminal .. " -g 180x54-20+34 -e sudo iptraf-ng -i all "
+iptraf = terminal .. " -g 180x54-20+34 -e sudo iptraf -i all "
+iptraf = "unity-control-center"
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -83,7 +84,7 @@ end
 tags = {}
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ "main", "stuff" }, s, layouts[1])
+    tags[s] = awful.tag({ "main", "stuff", "windows" }, s, layouts[1])
 end
 -- }}}
 
@@ -99,13 +100,24 @@ myawesomemenu = {
 toolsmenu = {
   { "Sublime", "/home/luuk/tools/sublime_text_3/sublime_text"},
   { "CLion", "/home/luuk/tools/clion/bin/clion.sh"},
-  { "Idea", "/home/luuk/tools/idea/bin/idea.sh"}
+  { "Idea", "/home/luuk/tools/idea/bin/idea.sh"},
+  { "Kraken", "/usr/bin/gitkraken"}
+}
+
+programsmenu = {
+  { "Skype", "/usr/bin/skype"},
+  { "Teamspeak", "/home/luuk/tools/ts3/ts3client_runscript.sh"},
+  { "Steam", "/usr/bin/steam"},
+  { "VirtualBox", "/usr/bin/virtualbox"}
 }
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
                                     { "files", "nautilus ." },
                                     { "Firefox", "/usr/bin/firefox" },
-                                    { "Tools", toolsmenu}
+                                    { "Chrome", "/usr/bin/google-chrome-stable" },
+                                    { "Vivaldi", "/usr/bin/vivaldi" },
+                                    { "Tools", toolsmenu},
+                                    { "Programs", programsmenu}
                                   }
                         })
 
@@ -218,8 +230,8 @@ mpdwidget = lain.widgets.mpd({
             artist = " mpd "
             title  = "paused "
         else
-            artist = ""
-            title  = ""
+            artist = " mpd "
+            title  = " not playing"
             mpdicon:set_image(beautiful.music)
         end
 
@@ -235,7 +247,7 @@ function mailcount()
     local l = nil
     if f ~= nil then
         l = f:read()
-        if l == "0" or l ~= nil then
+        if l == "0" or l ~= nil or l == 0 then
             mailicon:set_image(beautiful.mail)
         else
             mailicon:set_image(beautiful.mailopen)
@@ -244,7 +256,7 @@ function mailcount()
           l = "?"
     end
     f:close()
-    return l
+    return l .. " "
 end
 
 mymail = wibox.widget.textbox( mailcount() )
@@ -660,6 +672,11 @@ client.connect_signal("manage", function (c, startup)
         awful.titlebar(c):set_widget(layout)
     end
 end)
+
+-- {{ @ STARTUP }} --
+awful.util.spawn_with_shell("xset m 1 1")
+awful.util.spawn_with_shell("mopidy")
+awful.util.spawn_with_shell("dropbox start")
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
