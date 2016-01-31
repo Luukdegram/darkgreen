@@ -84,7 +84,7 @@ end
 tags = {}
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ "main", "stuff", "windows" }, s, layouts[1])
+    tags[s] = awful.tag({ "一", "二", "三", "四", "五", "六" }, s, layouts[1])
 end
 -- }}}
 
@@ -99,12 +99,14 @@ myawesomemenu = {
 
 toolsmenu = {
   { "Sublime", "/home/luuk/tools/sublime_text_3/sublime_text"},
-  { "CLion", "/home/luuk/tools/clion/bin/clion.sh"},
+  { "Android Studio", "/home/luuk/tools/android-studio/bin/studio.sh"},
+  { "Clion", "/home/luuk/tools/clion/bin/clion.sh"},
   { "Idea", "/home/luuk/tools/idea/bin/idea.sh"},
   { "Kraken", "/usr/bin/gitkraken"}
 }
 
 programsmenu = {
+  { "Spotify", "/usr/bin/spotify"},
   { "Skype", "/usr/bin/skype"},
   { "Teamspeak", "/home/luuk/tools/ts3/ts3client_runscript.sh"},
   { "Steam", "/usr/bin/steam"},
